@@ -4,14 +4,16 @@ drive_type=ssd
 usr=kaye
 dsetpath=/scratch/local/$drive_type/$kaye
 devhost=vggdebug8
-
+ext=tar.gz
+file=$dir.$ext
 echo "attempting scp transfer"
-if ! scp -q -o LogLevel=QUIET -r $usr@"$host".robots.ox.ac.uk:~/$dir.zip $usr@$devhost:$dsetpath/tmp/$dir.zip; then
+if ! scp -q -o LogLevel=QUIET -r $usr@"$host".robots.ox.ac.uk:~/$file $usr@$devhost:$dsetpath/tmp/$file; then
     echo "scp failed!!"
     exit 1
 fi
-if ! unzip -qq $dsetpath/tmp/$dir.zip -d $dsetpath/$dir; then 
+echo "transfer complete! un-gz"
+# if ! tar xf $dsetpath/tmp/$file -C $dsetpath/$dir/tmp; then 
+if ! gzip -d $dsetpath/tmp/$file; then
     echo "dev side unzip failed!"
     exit 1
 fi
-rm -rf $dsetpath/tmp/$dir.zip
